@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import DownloadCSVButton from './DownloadCSVButton';
+import GenerateImagesButton  from './GenerateImagesButton';
 
 function ConfigPanel({ messages }) {
   const [title, setTitle] = useState('');
@@ -42,12 +43,9 @@ function ConfigPanel({ messages }) {
       </div>
 
       <div className="pt-2 space-y-2">
-
         <DownloadCSVButton messages={messages} />
+        <GenerateImagesButton messages={messages} />
 
-        <button className="w-full bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800 text-sm">
-          Download Screenshots
-        </button>
       </div>
     </div>
   );
