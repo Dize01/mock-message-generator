@@ -37,7 +37,7 @@ function App() {
       >
         {/* Chat Preview */}
         <div className="flex-1 overflow-y-auto p-4 bg-white">
-          <ChatPreview messages={messages} setMessages={setMessages} />
+          <ChatPreview messages={messages} setMessages={setMessages}/>
         </div>
 
         {/* Message Input Area */}

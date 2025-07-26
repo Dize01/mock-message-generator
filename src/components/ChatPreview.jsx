@@ -32,7 +32,7 @@ function ChatPreview({ messages, setMessages }) {
   const handleAddBelow = (index) => {
     const newMsg = {
       id: Date.now() + Math.random(),
-      sender: 'You',
+      sender:  'You', // fallback just in case
       text: '',
       image: null,
     };
@@ -44,34 +44,54 @@ function ChatPreview({ messages, setMessages }) {
     });
   };
 
+  const resizeImageToBase64 = (file, callback) => {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const maxWidth = 200;
+      const scale = maxWidth / img.width;
+      const canvas = document.createElement('canvas');
+      canvas.width = maxWidth;
+      canvas.height = img.height * scale;
 
-  const handleEdit = (msg) => {
-    if (msg.image) {
-      // Replace image logic
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const base64 = event.target.result;
-          const updated = messages.map((m) =>
-            m.id === msg.id ? { ...m, image: base64 } : m
-          );
-          setMessages(updated);
-        };
-        reader.readAsDataURL(file);
-      };
-      input.click();
-    } else {
-      // Enable inline text edit
-      setEditingTextId(msg.id);
-      setEditTextValue(msg.text || '');
-    }
+      const base64 = canvas.toDataURL('image/jpeg', 0.7);
+      callback(base64);
+    };
+    img.src = e.target.result;
   };
+  reader.readAsDataURL(file);
+};
+
+
+const handleEdit = (msg) => {
+  if (msg.image) {
+    // Replace image logic with resize and base64 conversion
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      resizeImageToBase64(file, (base64) => {
+        const updated = messages.map((m) =>
+          m.id === msg.id ? { ...m, image: base64 } : m
+        );
+        setMessages(updated);
+      });
+    };
+    input.click();
+  } else {
+    // Enable inline text edit
+    setEditingTextId(msg.id);
+    setEditTextValue(msg.text || '');
+  }
+};
+
 
   const saveEditedText = (id) => {
     const updated = messages.map((m) =>
