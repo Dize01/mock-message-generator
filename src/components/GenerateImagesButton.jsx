@@ -2,7 +2,8 @@ import { useState, useRef } from 'react';
 import * as htmlToImage from 'html-to-image';
 import ChatPreview from './ChatPreview';
 
-function GenerateImagesButton({ messages }) {
+function GenerateImagesButton({ messages, name, time, title }) {
+
   const [pageIndex, setPageIndex] = useState(0);
   const [chunks, setChunks] = useState([]);
   const [generating, setGenerating] = useState(false);
@@ -81,7 +82,7 @@ function GenerateImagesButton({ messages }) {
       const dataUrl = await htmlToImage.toPng(captureRef.current);
       const link = document.createElement('a');
       link.href = dataUrl;
-      link.download = `chat-page-${i + 1}.png`;
+      link.download = `${title?.replace(/\s+/g, '_') || 'chat'}-page-${i + 1}.png`;
       link.click();
     }
 
@@ -140,7 +141,7 @@ function GenerateImagesButton({ messages }) {
                 color: '#333',
                 fontWeight: 'bold'
               }}>
-                22:11
+                {time || '22:11'}
               </div>
 
               {/* Top right indicators */}
@@ -193,17 +194,21 @@ function GenerateImagesButton({ messages }) {
                   width: '36px',
                   height: '36px',
                   borderRadius: '50%',
-                  backgroundColor: '#bcd0f5',
+                  backgroundColor: '#92A8DF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '20px',
-                  color: '#4666a8',
+                  color: '#92A8DF',
                   marginBottom: '2px'
                 }}>
-                  👤
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="#6683CD"/>
+                      <path d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z" fill="#6683CD"/>
+                    </svg>
                 </div>
-                <div style={{ fontSize: '13px', fontWeight: '500' }}>Brooke &lt;3</div>
+                <div style={{ fontSize: '13px', fontWeight: '500' }}>{(name || 'Unknown') + ' >'}</div>
               </div>
 
               {/* Video call icon */}

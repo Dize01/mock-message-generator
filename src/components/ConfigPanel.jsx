@@ -44,7 +44,12 @@ function ConfigPanel({ messages }) {
 
       <div className="pt-2 space-y-2">
         <DownloadCSVButton messages={messages} />
-        <GenerateImagesButton messages={messages} />
+        <GenerateImagesButton
+          messages={messages}
+          name={participants}
+          time={time}
+          title={title}
+        />
 
       </div>
     </div>
