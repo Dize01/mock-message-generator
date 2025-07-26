@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ConfigPanel from './components/ConfigPanel';
 import ChatPreview from './components/ChatPreview';
 import MessageInput from './components/MessageInput';
@@ -8,6 +8,10 @@ function App() {
     { id: 1, sender: 'You', text: 'Hey! How are you doing?' },
     { id: 2, sender: 'Jessica', text: 'I’m good, thanks! Just working on projects.' }
   ]);
+
+  useEffect(() => {
+    console.log('Updated messages:', messages);
+  }, [messages]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-6 px-4">
@@ -21,17 +25,22 @@ function App() {
         </div>
 
         {/* Right Workspace */}
-        <div className="w-full md:w-2/3 flex flex-col">
-          {/* Chat Preview */}
-          <div className="flex-1 p-4 overflow-y-auto border-b">
-            <ChatPreview messages={messages} />
-          </div>
+        <div className="w-full flex flex-col items-center justify-start py-4">
+          <div
+            className="w-[380px] min-h-[750px] max-h-screen flex flex-col border border-gray-300 rounded-md shadow-lg overflow-hidden"
+          >
+            {/* Chat Preview */}
+            <div className="flex-1 overflow-y-auto p-4 bg-white">
+              <ChatPreview messages={messages} setMessages={setMessages} />
+            </div>
 
-          {/* Message Input Area */}
-          <div className="p-4 border-t bg-gray-50">
-            <MessageInput setMessages={setMessages} />
+            {/* Message Input Area */}
+            <div className="p-4 border-t bg-gray-50">
+              <MessageInput setMessages={setMessages} />
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   );

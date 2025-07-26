@@ -11,7 +11,7 @@ function MessageInput({ setMessages }) {
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        const maxWidth = 250;
+        const maxWidth = 200;
         const scale = maxWidth / img.width;
         const canvas = document.createElement('canvas');
         canvas.width = maxWidth;
@@ -88,6 +88,9 @@ function MessageInput({ setMessages }) {
           placeholder="Type your message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') sendMessage();
+          }}
         />
 
         <label className="cursor-pointer">

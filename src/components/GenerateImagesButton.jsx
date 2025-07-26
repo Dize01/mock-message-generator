@@ -8,14 +8,63 @@ function GenerateImagesButton({ messages }) {
   const [generating, setGenerating] = useState(false);
   const captureRef = useRef(null);
 
-  const IMAGE_HEIGHT = 750;
+  const IMAGE_WIDTH = 380;
+  const IMAGE_HEIGHT = 850;
+  const HEADER_HEIGHT = 80;
+  const FOOTER_HEIGHT = 60;
+  const BODY_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
+  const CANVAS_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 70;
+
+  const waitForImagesToLoad = (container) => {
+    const images = container.querySelectorAll('img');
+    const promises = [];
+
+    images.forEach((img) => {
+      if (!img.complete) {
+        promises.push(
+          new Promise((resolve) => {
+            img.onload = resolve;
+            img.onerror = resolve; // proceed even if one fails
+          })
+        );
+      }
+    });
+
+    return Promise.all(promises);
+  };
+
 
   const simulateChunking = () => {
-    const maxMessagesPerChunk = 6; // simple simulation
+    // Use measured height of each message to simulate page chunking
     const result = [];
-    for (let i = 0; i < messages.length; i += maxMessagesPerChunk) {
-      result.push(messages.slice(i, i + maxMessagesPerChunk));
+    let currentChunk = [];
+    let currentHeight = 0;
+
+    for (let msg of messages) {
+      const h = msg.height || 60; // fallback to estimated height if missing
+
+      console.log('BODY_HEIGHT ----- ' + BODY_HEIGHT);
+      console.log('text ----- ' + msg.text);
+      console.log('height ----- ' + msg.height);
+      
+      if (currentHeight + h > CANVAS_HEIGHT) {
+        console.log('currentHeight ----- ' + currentHeight);
+        console.log('im in new chunk ----- ');
+        result.push(currentChunk);
+        currentChunk = [msg];
+        currentHeight = h;
+      } else {
+        console.log('currentHeight ----- ' + currentHeight);
+        console.log('im in chunk ----- ');
+        currentChunk.push(msg);
+        currentHeight += h;
+      }
     }
+
+    if (currentChunk.length > 0) {
+      result.push(currentChunk);
+    }
+
     return result;
   };
 
@@ -26,7 +75,8 @@ function GenerateImagesButton({ messages }) {
 
     for (let i = 0; i < chunks.length; i++) {
       setPageIndex(i);
-      await new Promise((res) => setTimeout(res, 300)); // wait for DOM to render
+      await new Promise((res) => setTimeout(res, 1000)); // longer delay
+      await waitForImagesToLoad(captureRef.current);    // wait for base64 image loads
 
       const dataUrl = await htmlToImage.toPng(captureRef.current);
       const link = document.createElement('a');
@@ -56,15 +106,67 @@ function GenerateImagesButton({ messages }) {
           <div
             ref={captureRef}
             style={{
-              width: '430px',
-              height: '750px',
-              padding: '16px',
+              width: `${IMAGE_WIDTH}px`,
+              height: `${IMAGE_HEIGHT}px`,
+              display: 'flex',
+              flexDirection: 'column',
               backgroundColor: 'white',
-              overflow: 'hidden',
               boxSizing: 'border-box',
+              overflow: 'hidden',
+              border: '1px solid #ccc',
+              borderRadius: '30px',
+              fontFamily: 'system-ui',
             }}
           >
-            <ChatPreview messages={chunks[pageIndex]} />
+            {/* Header */}
+            <div style={{
+              height: `${HEADER_HEIGHT}px`,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderBottom: '1px solid #eee',
+              fontSize: '16px',
+              fontWeight: 'bold'
+            }}>
+              Jessica
+              <div style={{ fontSize: '12px', color: '#888' }}>9:41 AM</div>
+            </div>
+
+            {/* Message Body */}
+            <div style={{
+              height: `${BODY_HEIGHT}px`,
+              overflow: 'hidden',
+              padding: '12px',
+              boxSizing: 'border-box',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+            }}>
+              <ChatPreview messages={chunks[pageIndex]} />
+            </div>
+
+            {/* Footer */}
+            <div style={{
+              height: `${FOOTER_HEIGHT}px`,
+              borderTop: '1px solid #eee',
+              padding: '10px 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}>
+              <div style={{
+                flex: 1,
+                backgroundColor: '#f2f2f2',
+                borderRadius: '20px',
+                padding: '6px 12px',
+                fontSize: '14px',
+                color: '#999'
+              }}>
+                iMessage
+              </div>
+              <div style={{ color: '#007AFF', fontWeight: 'bold' }}>Send</div>
+            </div>
           </div>
         )}
       </div>
