@@ -14,7 +14,7 @@ function GenerateImagesButton({ messages, name, time, title }) {
   const HEADER_HEIGHT = 80;
   const FOOTER_HEIGHT = 60;
   const BODY_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
-  const CANVAS_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 100;
+  const CANVAS_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 120;
 
   const waitForImagesToLoad = (container) => {
     const images = container.querySelectorAll('img');
@@ -40,22 +40,23 @@ function GenerateImagesButton({ messages, name, time, title }) {
     const result = [];
     let currentChunk = [];
     let currentHeight = 0;
+      console.log('CANVAS_HEIGHT ----- ' + CANVAS_HEIGHT);
+      console.log('BODY_HEIGHT ----- ' + BODY_HEIGHT);
 
     for (let msg of messages) {
       const h = msg.height || 60; // fallback to estimated height if missing
+      
 
-      console.log('BODY_HEIGHT ----- ' + BODY_HEIGHT);
       console.log('text ----- ' + msg.text);
       console.log('height ----- ' + msg.height);
+      console.log('currentHeight ----- ' + (currentHeight + h));
       
       if (currentHeight + h > CANVAS_HEIGHT) {
-        console.log('currentHeight ----- ' + currentHeight);
         console.log('im in new chunk ----- ');
         result.push(currentChunk);
         currentChunk = [msg];
         currentHeight = h;
       } else {
-        console.log('currentHeight ----- ' + currentHeight);
         console.log('im in chunk ----- ');
         currentChunk.push(msg);
         currentHeight += h;

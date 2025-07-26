@@ -17,11 +17,14 @@ function ChatPreview({ messages, setMessages, selectedSender }) {
       if (ref && ref.offsetHeight && msg.height !== ref.offsetHeight) {
         return { ...msg, height: ref.offsetHeight };
       }
+      console.log('---------- msg '+ msg.height);
+
       return msg;
     });
 
     const hasChanged = updated.some((msg, idx) => msg.height !== messages[idx]?.height);
     if (hasChanged) {
+      console.log('---------- updated '+ updated);
       setMessages(updated);
     }
   }, [messages, setMessages]);
