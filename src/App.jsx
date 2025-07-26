@@ -6,6 +6,7 @@ import MessageInput from './components/MessageInput';
 function App() {
   const [messages, setMessages] = useState([ ]);
   const [participants, setParticipants] = useState('');
+  const [selectedSender, setSelectedSender] = useState('You');
 
   useEffect(() => {
     console.log('Updated messages:', messages);
@@ -37,7 +38,7 @@ function App() {
       >
         {/* Chat Preview */}
         <div className="flex-1 overflow-y-auto p-4 bg-white">
-          <ChatPreview messages={messages} setMessages={setMessages}/>
+          <ChatPreview messages={messages} setMessages={setMessages}  selectedSender={selectedSender}/>
         </div>
 
         {/* Message Input Area */}
@@ -45,6 +46,8 @@ function App() {
           <MessageInput
             setMessages={setMessages}
             participants={participants}
+            selectedSender={selectedSender}
+            setSelectedSender={setSelectedSender}
           />
         </div>
       </div>

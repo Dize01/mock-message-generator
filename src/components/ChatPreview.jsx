@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Pencil, Trash2, Plus, CheckCircle, XCircle } from 'lucide-react';
 
-function ChatPreview({ messages, setMessages }) {
+function ChatPreview({ messages, setMessages, selectedSender }) {
+
   const refs = useRef({});
   const [activeId, setActiveId] = useState(null);
   const [editingTextId, setEditingTextId] = useState(null);
@@ -30,9 +31,10 @@ function ChatPreview({ messages, setMessages }) {
   };
 
   const handleAddBelow = (index) => {
+    console.log('------selectedSender' + selectedSender);
     const newMsg = {
       id: Date.now() + Math.random(),
-      sender:  'You', // fallback just in case
+      sender:  selectedSender || 'You',
       text: '',
       image: null,
     };

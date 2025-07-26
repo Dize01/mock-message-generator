@@ -14,7 +14,7 @@ function GenerateImagesButton({ messages, name, time, title }) {
   const HEADER_HEIGHT = 80;
   const FOOTER_HEIGHT = 60;
   const BODY_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
-  const CANVAS_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 70;
+  const CANVAS_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 100;
 
   const waitForImagesToLoad = (container) => {
     const images = container.querySelectorAll('img');

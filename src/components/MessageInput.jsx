@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Paperclip, Send } from 'lucide-react';
 
-function MessageInput({ setMessages, participants }) {
+function MessageInput({ setMessages, participants, selectedSender, setSelectedSender }) {
   const [message, setMessage] = useState('');
-  const [sender, setSender] = useState('You');
-
   const secondParticipant = participants?.trim() || 'Unknown';
+
 
   // Resize & convert image to base64
   const resizeImageToBase64 = (file, callback) => {
@@ -38,7 +37,7 @@ function MessageInput({ setMessages, participants }) {
           ...prev,
           {
             id: Date.now(),
-            sender,
+            sender: selectedSender, // ✅ FIXED KEY
             text: '',
             image: base64Image,
           },
@@ -50,11 +49,13 @@ function MessageInput({ setMessages, participants }) {
   const sendMessage = () => {
     if (!message.trim()) return;
 
+    console.log('----------selectedSender' + selectedSender);
+
     setMessages((prev) => [
       ...prev,
       {
         id: Date.now(),
-        sender,
+        sender: selectedSender, // ✅ FIXED KEY
         text: message.trim(),
         image: null,
       },
@@ -70,9 +71,9 @@ function MessageInput({ setMessages, participants }) {
         {['You', secondParticipant].map((name) => (
           <button
             key={name}
-            onClick={() => setSender(name)}
+            onClick={() => setSelectedSender(name)}
             className={`px-4 py-2 rounded-full border ${
-              sender === name
+              selectedSender  === name
                 ? 'bg-indigo-500 text-white border-indigo-600'
                 : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'
             }`}
