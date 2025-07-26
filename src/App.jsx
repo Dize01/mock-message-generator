@@ -24,6 +24,7 @@ function App() {
       <h2 className="text-md font-semibold text-gray-700 mb-4">Message Settings</h2>
       <ConfigPanel
         messages={messages}
+        setMessages={setMessages}  // ✅ Pass it down
         participants={participants}
         setParticipants={setParticipants}
       />

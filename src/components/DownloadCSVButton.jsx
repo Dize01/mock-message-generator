@@ -6,8 +6,9 @@ function downloadCSV(messages) {
     return;
   }
 
-  const header = ['Sender', 'Text', 'Image'];
+  const header = ['Id','Sender', 'Text', 'Image'];
   const rows = messages.map((msg) => [
+    msg.id,
     msg.sender,
     msg.text?.replace(/"/g, '""') || '',
     msg.image || ''

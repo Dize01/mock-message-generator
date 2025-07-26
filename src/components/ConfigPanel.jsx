@@ -2,16 +2,80 @@ import { useState } from 'react';
 import DownloadCSVButton from './DownloadCSVButton';
 import GenerateImagesButton  from './GenerateImagesButton';
 
-function ConfigPanel({ messages, participants, setParticipants }) {
+function ConfigPanel({ messages, setMessages, participants, setParticipants }) {
 
   const [title, setTitle] = useState('');
   const [time, setTime] = useState('');
   
+  const handleUploadCSV = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  return (
-    <div className="space-y-4">
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target.result;
+
+      const lines = text.trim().split('\n');
+
+      // Extract headers: remove quotes and trim spaces
+      const header = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+
+      const parsedMessages = lines.slice(1).map((line) => {
+        // This regex correctly splits CSV values, even with quoted commas
+        const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+
+        if (!values || values.length < header.length) return null;
+
+        const cleaned = values.map(val => val.replace(/^"|"$/g, '').trim());
+
+        return {
+          id: cleaned[header.indexOf('Id')],
+          sender: cleaned[header.indexOf('Sender')],
+          text: cleaned[header.indexOf('Text')],
+          image: cleaned[header.indexOf('Image')] || null,
+        };
+      }).filter(Boolean);
+
+      setMessages(parsedMessages);
+    };
+
+    reader.readAsText(file);
+  };
+
+
+
+
+return (
+  <div className="space-y-6">
+
+    {/* File Upload & Reset Section */}
+    <fieldset className="space-y-2">
+      <legend className="text-sm font-semibold text-gray-600 mb-1">Data Controls</legend>
+
+      <button
+        onClick={() => setMessages([])}
+        className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-600 rounded hover:bg-gray-100"
+      >
+        New Chat
+      </button>
+
+      <label className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-indigo-600 bg-white border border-indigo-500 rounded cursor-pointer hover:bg-indigo-50 hover:text-indigo-700">
+        Upload CSV
+        <input
+          type="file"
+          accept=".csv"
+          className="hidden"
+          onChange={(e) => handleUploadCSV(e)}
+        />
+      </label>
+    </fieldset>
+
+
+    {/* Metadata Section */}
+    <fieldset className="space-y-4">
+      <legend className="text-sm font-semibold text-gray-600 mb-1">Message Metadata</legend>
+
       <div>
-        
         <label className="block text-sm font-medium text-gray-700 mb-1">Title (File Name)</label>
         <input
           type="text"
@@ -42,19 +106,23 @@ function ConfigPanel({ messages, participants, setParticipants }) {
           onChange={(e) => setParticipants(e.target.value)}
         />
       </div>
+    </fieldset>
 
-      <div className="pt-2 space-y-2">
-        <DownloadCSVButton messages={messages} />
-        <GenerateImagesButton
-          messages={messages}
-          name={participants}
-          time={time}
-          title={title}
-        />
+    {/* Export Section */}
+    <fieldset className="space-y-2 pt-1">
+      <legend className="text-sm font-semibold text-gray-600 mb-1">Export</legend>
+      <DownloadCSVButton messages={messages} />
+      <GenerateImagesButton
+        messages={messages}
+        name={participants}
+        time={time}
+        title={title}
+      />
+    </fieldset>
+    
+  </div>
+);
 
-      </div>
-    </div>
-  );
 }
 
 export default ConfigPanel;
