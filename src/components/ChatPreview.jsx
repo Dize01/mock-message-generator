@@ -7,6 +7,7 @@ function ChatPreview({ messages, setMessages, selectedSender }) {
   const [activeId, setActiveId] = useState(null);
   const [editingTextId, setEditingTextId] = useState(null);
   const [editTextValue, setEditTextValue] = useState('');
+  const [insertMenuIndex, setInsertMenuIndex] = useState(null);
 
   // Update message height after render
   useEffect(() => {
@@ -33,21 +34,18 @@ function ChatPreview({ messages, setMessages, selectedSender }) {
     setMessages((prev) => prev.filter((m) => m.id !== id));
   };
 
-  const handleAddBelow = (index) => {
-    console.log('------selectedSender' + selectedSender);
-    const newMsg = {
-      id: Date.now() + Math.random(),
-      sender:  selectedSender || 'You',
-      text: '',
-      image: null,
-    };
-
-    setMessages((prevMessages) => {
-      const updated = [...prevMessages];
-      updated.splice(index + 1, 0, newMsg);
-      return updated;
-    });
+const handleAddBelow = (index, type = 'text') => {
+  const newMsg = {
+    id: Date.now() + Math.random(),
+    sender: selectedSender || 'You',
+    text: type === 'text' ? '' : null,
+    image: type === 'image' ? '' : null,
   };
+  const updated = [...messages];
+  updated.splice(index + 1, 0, newMsg);
+  setMessages(updated);
+};
+
 
   const resizeImageToBase64 = (file, callback) => {
   const reader = new FileReader();
@@ -177,36 +175,100 @@ const handleEdit = (msg) => {
 
               </div>
 
-              {/* Action Buttons */}
-              {isActive && (
-                <div
-                  className={`mt-1 flex gap-2 ${
-                    isYou ? 'justify-end pr-1' : 'justify-start pl-1'
-                  }`}
-                >
-                  <button
-                    onClick={() => handleEdit(msg)}
-                    className="w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 flex items-center justify-center"
-                    title="Edit"
-                  >
-                    <Pencil className="w-3 h-3 text-white" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(msg.id)}
-                    className="w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center"
-                    title="Delete"
-                  >
-                    <Trash2 className="w-3 h-3 text-white" />
-                  </button>
-                  <button
-                    onClick={() => handleAddBelow(idx)}
-                    className="w-6 h-6 rounded-full bg-indigo-500 hover:bg-indigo-600 flex items-center justify-center"
-                    title="Add Message Below"
-                  >
-                    <Plus className="w-3 h-3 text-white" />
-                  </button>
-                </div>
-              )}
+{/* Action Buttons */}
+{isActive && (
+  <div
+    className={`mt-1 flex flex-col gap-1 ${
+      isYou ? 'items-end pr-1' : 'items-start pl-1'
+    }`}
+  >
+    <div className="flex gap-2">
+      <button
+        onClick={() => handleEdit(msg)}
+        className="w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 flex items-center justify-center"
+        title="Edit"
+      >
+        <Pencil className="w-3 h-3 text-white" />
+      </button>
+      <button
+        onClick={() => handleDelete(msg.id)}
+        className="w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center"
+        title="Delete"
+      >
+        <Trash2 className="w-3 h-3 text-white" />
+      </button>
+      <button
+        onClick={() =>
+          setInsertMenuIndex((prev) => (prev === idx ? null : idx))
+        }
+        className="w-6 h-6 rounded-full bg-indigo-500 hover:bg-indigo-600 flex items-center justify-center"
+        title="Add Message Below"
+      >
+        <Plus className="w-3 h-3 text-white" />
+      </button>
+    </div>
+
+    {/* Inline Add Menu */}
+    {insertMenuIndex === idx && (
+      <div className="flex gap-2 mt-1">
+        <button
+          onClick={() => {
+            handleAddBelow(idx, 'text');
+            setInsertMenuIndex(null);
+          }}
+          className="px-2 py-1 text-xs rounded-full bg-gray-200 hover:bg-gray-300"
+        >
+          Text
+        </button>
+        <button
+          onClick={() => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+
+              // Resize logic
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => {
+                  const maxWidth = 200;
+                  const scale = maxWidth / img.width;
+                  const canvas = document.createElement('canvas');
+                  canvas.width = maxWidth;
+                  canvas.height = img.height * scale;
+                  const ctx = canvas.getContext('2d');
+                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                  const base64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                  const newMsg = {
+                    id: Date.now() + Math.random(),
+                    sender: selectedSender || 'You',
+                    text: '',
+                    image: base64,
+                  };
+                  const updated = [...messages];
+                  updated.splice(idx + 1, 0, newMsg);
+                  setMessages(updated);
+                  setInsertMenuIndex(null);
+                };
+                img.src = ev.target.result;
+              };
+              reader.readAsDataURL(file);
+            };
+            input.click();
+          }}
+          className="px-2 py-1 text-xs rounded-full bg-gray-200 hover:bg-gray-300"
+        >
+          Image
+        </button>
+      </div>
+    )}
+  </div>
+)}
+
             </div>
           );
         })}
