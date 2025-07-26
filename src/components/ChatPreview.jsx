@@ -36,10 +36,14 @@ function ChatPreview({ messages, setMessages }) {
       text: '',
       image: null,
     };
-    const updated = [...messages];
-    updated.splice(index + 1, 0, newMsg);
-    setMessages(updated);
+
+    setMessages((prevMessages) => {
+      const updated = [...prevMessages];
+      updated.splice(index + 1, 0, newMsg);
+      return updated;
+    });
   };
+
 
   const handleEdit = (msg) => {
     if (msg.image) {
@@ -98,7 +102,7 @@ function ChatPreview({ messages, setMessages }) {
                   isYou
                     ? 'bg-blue-500 text-white self-end ml-auto rounded-br-none'
                     : 'bg-gray-200 text-gray-800 self-start rounded-bl-none'
-                } ${msg.text ? 'px-4 py-2' : 'p-0'}`}
+                } ${msg.image ?  'p-0' : 'px-4 py-2'}`}
               >
                 {msg.image && (
                   <img
