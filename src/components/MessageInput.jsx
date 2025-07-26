@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Paperclip, Send } from 'lucide-react';
 
-function MessageInput({ setMessages }) {
+function MessageInput({ setMessages, participants }) {
   const [message, setMessage] = useState('');
   const [sender, setSender] = useState('You');
+
+  const secondParticipant = participants?.trim() || 'Unknown';
 
   // Resize & convert image to base64
   const resizeImageToBase64 = (file, callback) => {
@@ -65,7 +67,7 @@ function MessageInput({ setMessages }) {
     <div className="space-y-3">
       {/* Sender Buttons */}
       <div className="flex gap-2">
-        {['You', 'Jessica'].map((name) => (
+        {['You', secondParticipant].map((name) => (
           <button
             key={name}
             onClick={() => setSender(name)}

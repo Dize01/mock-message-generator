@@ -2,16 +2,17 @@ import { useState } from 'react';
 import DownloadCSVButton from './DownloadCSVButton';
 import GenerateImagesButton  from './GenerateImagesButton';
 
-function ConfigPanel({ messages }) {
+function ConfigPanel({ messages, participants, setParticipants }) {
+
   const [title, setTitle] = useState('');
   const [time, setTime] = useState('');
-  const [participants, setParticipants] = useState('');
+  
 
   return (
     <div className="space-y-4">
       <div>
         
-        <label className="block text-sm font-medium text-gray-700 mb-1">Title (Chat Name)</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Title (File Name)</label>
         <input
           type="text"
           placeholder="e.g. Jessica"
