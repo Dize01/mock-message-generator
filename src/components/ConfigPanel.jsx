@@ -50,8 +50,6 @@ return (
 
     {/* File Upload & Reset Section */}
     <fieldset className="space-y-2">
-      <legend className="text-sm font-semibold text-gray-600 mb-1">Data Controls</legend>
-
       <button
         onClick={() => setMessages([])}
         className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-600 rounded hover:bg-gray-100"
@@ -73,10 +71,9 @@ return (
 
     {/* Metadata Section */}
     <fieldset className="space-y-4">
-      <legend className="text-sm font-semibold text-gray-600 mb-1">Message Metadata</legend>
-
+      <h2 className="text-md font-semibold text-gray-700 mb-4">Message Details</h2>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Title (File Name)</label>
+        <label className="block text-sm font-small text-gray-700 mb-1">File Name</label>
         <input
           type="text"
           placeholder="e.g. Jessica"
@@ -87,7 +84,7 @@ return (
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Time (24h format)</label>
+        <label className="block text-sm font-small text-gray-700 mb-1">Time (24h format)</label>
         <input
           type="time"
           className="w-full px-3 py-2 border rounded-md text-sm"
@@ -97,10 +94,10 @@ return (
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">People in Conversation</label>
+        <label className="block text-sm font-small text-gray-700 mb-1">Recipient</label>
         <input
           type="text"
-          placeholder="e.g. You, Jessica"
+          placeholder="e.g. Jessica"
           className="w-full px-3 py-2 border rounded-md text-sm"
           value={participants}
           onChange={(e) => setParticipants(e.target.value)}
@@ -110,7 +107,7 @@ return (
 
     {/* Export Section */}
     <fieldset className="space-y-2 pt-1">
-      <legend className="text-sm font-semibold text-gray-600 mb-1">Export</legend>
+      <h2 className="text-md font-semibold text-gray-700 mb-4">Download</h2>
       <DownloadCSVButton messages={messages} />
       <GenerateImagesButton
         messages={messages}
