@@ -216,7 +216,7 @@ const handleEdit = (msg) => {
             handleAddBelow(idx, 'text');
             setInsertMenuIndex(null);
           }}
-          className="px-2 py-1 text-xs rounded-full bg-gray-200 hover:bg-gray-300"
+          className="px-2 py-1 text-base rounded-full bg-gray-200 hover:bg-gray-300"
         >
           Text
         </button>
@@ -260,7 +260,7 @@ const handleEdit = (msg) => {
             };
             input.click();
           }}
-          className="px-2 py-1 text-xs rounded-full bg-gray-200 hover:bg-gray-300"
+          className="px-2 py-1 text-base rounded-full bg-gray-200 hover:bg-gray-300"
         >
           Image
         </button>

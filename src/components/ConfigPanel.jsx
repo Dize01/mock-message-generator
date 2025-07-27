@@ -77,7 +77,7 @@ return (
         <input
           type="text"
           placeholder="e.g. Jessica"
-          className="w-full px-3 py-2 border rounded-md text-sm"
+          className="w-full px-3 py-2 border rounded-md text-base"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -87,7 +87,7 @@ return (
         <label className="block text-sm font-small text-gray-700 mb-1">Time (24h format)</label>
         <input
           type="time"
-          className="w-full px-3 py-2 border rounded-md text-sm"
+          className="w-full px-3 py-2 border rounded-md text-base"
           value={time}
           onChange={(e) => setTime(e.target.value)}
         />
@@ -98,7 +98,7 @@ return (
         <input
           type="text"
           placeholder="e.g. Jessica"
-          className="w-full px-3 py-2 border rounded-md text-sm"
+          className="w-full px-3 py-2 border rounded-md text-base"
           value={participants}
           onChange={(e) => setParticipants(e.target.value)}
         />

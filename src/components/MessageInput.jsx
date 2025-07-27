@@ -87,7 +87,7 @@ function MessageInput({ setMessages, participants, selectedSender, setSelectedSe
       <div className="flex items-center gap-2">
         <input
           type="text"
-          className="flex-1 border rounded-full px-4 py-2 text-sm"
+          className="flex-1 border rounded-full px-4 py-2 text-base"
           placeholder="Type your message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}

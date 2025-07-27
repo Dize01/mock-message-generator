@@ -62,7 +62,7 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex flex-col items-center py-6 px-4">
+      <main className="flex-grow flex flex-col items-center py-6 px-0 md:px-4">
         {/* Hero Section */}
         <div className="text-center px-4 py-6">
           <h2 className="text-5xl font-bold text-gray-800 mb-2">
