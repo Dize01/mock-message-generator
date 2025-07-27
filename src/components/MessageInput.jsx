@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Paperclip, Send } from 'lucide-react';
 
-function MessageInput({ setMessages }) {
+function MessageInput({ setMessages, participants, selectedSender, setSelectedSender }) {
   const [message, setMessage] = useState('');
-  const [sender, setSender] = useState('You');
+  const secondParticipant = participants?.trim() || 'Unknown';
+
 
   // Resize & convert image to base64
   const resizeImageToBase64 = (file, callback) => {
@@ -11,7 +12,7 @@ function MessageInput({ setMessages }) {
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        const maxWidth = 250;
+        const maxWidth = 200;
         const scale = maxWidth / img.width;
         const canvas = document.createElement('canvas');
         canvas.width = maxWidth;
@@ -36,7 +37,7 @@ function MessageInput({ setMessages }) {
           ...prev,
           {
             id: Date.now(),
-            sender,
+            sender: selectedSender, // ✅ FIXED KEY
             text: '',
             image: base64Image,
           },
@@ -48,11 +49,13 @@ function MessageInput({ setMessages }) {
   const sendMessage = () => {
     if (!message.trim()) return;
 
+    console.log('----------selectedSender' + selectedSender);
+
     setMessages((prev) => [
       ...prev,
       {
         id: Date.now(),
-        sender,
+        sender: selectedSender, // ✅ FIXED KEY
         text: message.trim(),
         image: null,
       },
@@ -65,12 +68,12 @@ function MessageInput({ setMessages }) {
     <div className="space-y-3">
       {/* Sender Buttons */}
       <div className="flex gap-2">
-        {['You', 'Jessica'].map((name) => (
+        {['You', secondParticipant].map((name) => (
           <button
             key={name}
-            onClick={() => setSender(name)}
+            onClick={() => setSelectedSender(name)}
             className={`px-4 py-2 rounded-full border ${
-              sender === name
+              selectedSender  === name
                 ? 'bg-indigo-500 text-white border-indigo-600'
                 : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'
             }`}
@@ -88,6 +91,9 @@ function MessageInput({ setMessages }) {
           placeholder="Type your message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') sendMessage();
+          }}
         />
 
         <label className="cursor-pointer">
