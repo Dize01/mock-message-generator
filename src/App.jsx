@@ -91,7 +91,7 @@ function App() {
           </div>
 
           {/* Right Workspace */}
-          <div className="w-full flex flex-col items-center justify-start py-0 md:py-4 bg-gray-300 m-2 rounded-lg">
+          <div className="w-full flex flex-col items-center justify-start py-0 md:py-4 bg-gray-100 m-0 md:m-2 rounded-lg">
             <div className="w-[380px] min-h-[750px] max-h-screen flex flex-col border border-gray-300 rounded-md shadow-lg overflow-hidden">
               {/* Chat Preview */}
               <div className="flex-1 overflow-y-auto p-4 bg-white">
