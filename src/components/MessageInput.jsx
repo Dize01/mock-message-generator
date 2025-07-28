@@ -1,10 +1,27 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Paperclip, Send } from 'lucide-react';
 
 function MessageInput({ setMessages, participants, selectedSender, setSelectedSender }) {
   const [message, setMessage] = useState('');
   const secondParticipant = participants?.trim() || 'Unknown';
 
+  const senderNames = ['You', secondParticipant];
+  const buttonRefs = useRef([]);
+  const inputRef = useRef(null); // ✅ ref for input
+
+  const handleTab = (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const currentIndex = senderNames.indexOf(selectedSender);
+      const nextIndex = (currentIndex + 1) % senderNames.length;
+      setSelectedSender(senderNames[nextIndex]);
+
+      // Brief delay to ensure state updates before focusing
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    }
+  };
 
   // Resize & convert image to base64
   const resizeImageToBase64 = (file, callback) => {
@@ -37,7 +54,7 @@ function MessageInput({ setMessages, participants, selectedSender, setSelectedSe
           ...prev,
           {
             id: Date.now(),
-            sender: selectedSender, // ✅ FIXED KEY
+            sender: selectedSender,
             text: '',
             image: base64Image,
           },
@@ -55,7 +72,7 @@ function MessageInput({ setMessages, participants, selectedSender, setSelectedSe
       ...prev,
       {
         id: Date.now(),
-        sender: selectedSender, // ✅ FIXED KEY
+        sender: selectedSender,
         text: message.trim(),
         image: null,
       },
@@ -68,12 +85,13 @@ function MessageInput({ setMessages, participants, selectedSender, setSelectedSe
     <div className="space-y-3">
       {/* Sender Buttons */}
       <div className="flex gap-2">
-        {['You', secondParticipant].map((name) => (
+        {senderNames.map((name, index) => (
           <button
             key={name}
+            ref={(el) => (buttonRefs.current[index] = el)}
             onClick={() => setSelectedSender(name)}
             className={`px-4 py-2 rounded-full border ${
-              selectedSender  === name
+              selectedSender === name
                 ? 'bg-indigo-500 text-white border-indigo-600'
                 : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'
             }`}
@@ -86,6 +104,7 @@ function MessageInput({ setMessages, participants, selectedSender, setSelectedSe
       {/* Input Row */}
       <div className="flex items-center gap-2">
         <input
+          ref={inputRef} // ✅ attach ref to input
           type="text"
           className="flex-1 border rounded-full px-4 py-2 text-base"
           placeholder="Type your message..."
@@ -93,6 +112,7 @@ function MessageInput({ setMessages, participants, selectedSender, setSelectedSe
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') sendMessage();
+            if (e.key === 'Tab') handleTab(e);
           }}
         />
 
