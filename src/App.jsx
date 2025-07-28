@@ -9,6 +9,8 @@ function App() {
   const [participants, setParticipants] = useState("");
   const [selectedSender, setSelectedSender] = useState("You");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
+
 
   useEffect(() => {
     console.log("Updated messages:", messages);
@@ -62,7 +64,8 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex flex-col items-center py-6 px-0 md:px-4">
+      <main className="flex-grow flex flex-col items-center py-6 pb-0 md:pb-6 px-0 md:px-4">
+
         {/* Hero Section */}
         <div className="text-center px-4 py-6">
           <h2 className="text-5xl font-bold text-gray-800 mb-2">
@@ -77,8 +80,19 @@ function App() {
 
         {/* Workspace */}
         <div className="flex flex-col md:flex-row w-full max-w-6xl bg-white rounded-lg overflow-hidden border">
-          {/* Left Sidebar */}
-          <div className="w-full md:w-1/3 p-6 bg-white">
+
+          {/* Accordion Toggle for Mobile */}
+          <div className="md:hidden w-full px-4 mb-2 mt-2">
+            <button
+              onClick={() => setIsConfigOpen(!isConfigOpen)}
+              className="w-full px-4 py-2 bg-indigo-100 text-indigo-700 font-semibold rounded-md text-left"
+            >
+              {isConfigOpen ? "Hide Config Panel" : "Show Config Panel"}
+            </button>
+          </div>
+
+          {/* Left Sidebar (Accordion Style on Mobile) */}
+          <div className={`w-full md:w-1/3 p-6 bg-white ${isConfigOpen ? '' : 'hidden'} md:block`}>
             <h3 className="text-md font-semibold text-gray-700 mb-4">
               New Conversation
             </h3>
@@ -89,6 +103,7 @@ function App() {
               setParticipants={setParticipants}
             />
           </div>
+
 
           {/* Right Workspace */}
           <div className="w-full flex flex-col items-center justify-start py-0 md:py-4 bg-gray-100 m-0 md:m-2 rounded-lg">
@@ -117,7 +132,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-white border-t mt-8">
+      <footer className="w-full bg-white border-t mt-8 hidden sm:block">
         <div className="max-w-7xl mx-auto px-4 py-4 text-center text-sm text-gray-500">
           {/* Social Icons */}
           <div className="flex justify-center mb-2 gap-4 text-gray-500">
