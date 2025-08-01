@@ -23,7 +23,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-indigo-600">Kwagoo</h1>
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav 
           <nav className="space-x-2 text-sm text-gray-600 hidden sm:flex">
             {["Tools", "Contact Us", "About"].map((item) => (
               <a
@@ -35,17 +35,18 @@ function App() {
               </a>
             ))}
           </nav>
-
-          {/* Mobile Menu Toggle */}
+          */}
+          {/* Mobile Menu Toggle
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="sm:hidden text-gray-600"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
+           */}
         </div>
 
-        {/* Mobile Dropdown Nav */}
+        {/* Mobile Dropdown Nav 
         {isMobileMenuOpen && (
           <div className="sm:hidden px-4 pb-4">
             <nav className="flex flex-col space-y-2 text-sm text-gray-600">
@@ -60,7 +61,7 @@ function App() {
               ))}
             </nav>
           </div>
-        )}
+        )}*/}
       </header>
 
       {/* Main Content */}
@@ -134,7 +135,7 @@ function App() {
       {/* Footer */}
       <footer className="w-full bg-white border-t mt-8 hidden sm:block">
         <div className="max-w-7xl mx-auto px-4 py-4 text-center text-sm text-gray-500">
-          {/* Social Icons */}
+          {/* Social Icons 
           <div className="flex justify-center mb-2 gap-4 text-gray-500">
             <a
               href="https://instagram.com"
@@ -153,7 +154,7 @@ function App() {
               <Facebook className="w-5 h-5" />
             </a>
           </div>
-
+        */}
           © {new Date().getFullYear()} Kwagoo. All rights reserved.
         </div>
       </footer>
