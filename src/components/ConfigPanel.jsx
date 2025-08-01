@@ -1,46 +1,33 @@
 import { useState } from 'react';
 import DownloadCSVButton from './DownloadCSVButton';
 import GenerateImagesButton  from './GenerateImagesButton';
+import Papa from 'papaparse';
 
 function ConfigPanel({ messages, setMessages, participants, setParticipants }) {
 
   const [title, setTitle] = useState('');
   const [time, setTime] = useState('');
   
-  const handleUploadCSV = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+const handleUploadCSV = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const text = event.target.result;
-
-      const lines = text.trim().split('\n');
-
-      // Extract headers: remove quotes and trim spaces
-      const header = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
-
-      const parsedMessages = lines.slice(1).map((line) => {
-        // This regex correctly splits CSV values, even with quoted commas
-        const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-
-        if (!values || values.length < header.length) return null;
-
-        const cleaned = values.map(val => val.replace(/^"|"$/g, '').trim());
-
-        return {
-          id: cleaned[header.indexOf('Id')],
-          sender: cleaned[header.indexOf('Sender')],
-          text: cleaned[header.indexOf('Text')],
-          image: cleaned[header.indexOf('Image')] || null,
-        };
-      }).filter(Boolean);
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: (results) => {
+      const parsedMessages = results.data.map((row, i) => ({
+        id: row.Id || Date.now() + i,
+        sender: row.Sender?.trim() || 'Unknown',
+        text: row.Text?.trim() || '',
+        image: row.Image?.trim() || null,
+      }));
 
       setMessages(parsedMessages);
-    };
+    },
+  });
+};
 
-    reader.readAsText(file);
-  };
 
 
 
