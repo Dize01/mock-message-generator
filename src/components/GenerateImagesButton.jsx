@@ -92,6 +92,26 @@ function GenerateImagesButton({ messages, name, time, title }) {
     setGenerating(false);
   };
 
+const parseTime = (timeStr) => {
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(0);
+  return date;
+};
+
+const formatTime = (date) => {
+  const h = date.getHours().toString().padStart(2, '0');
+  const m = date.getMinutes().toString().padStart(2, '0');
+  return `${h}:${m}`;
+};
+
+const baseTime = parseTime(time || '22:11');
+const dynamicTime = formatTime(new Date(baseTime.getTime() + pageIndex * 60000));
+
+
+
   return (
     <>
       <button
@@ -142,7 +162,7 @@ function GenerateImagesButton({ messages, name, time, title }) {
                 color: '#333',
                 fontWeight: 'bold'
               }}>
-                {time || '22:11'}
+                {dynamicTime}
               </div>
 
               {/* Top right indicators */}
